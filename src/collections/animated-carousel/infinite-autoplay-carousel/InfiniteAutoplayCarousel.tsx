@@ -39,8 +39,6 @@ const InfiniteAutoplayCarousel = <T extends unknown>({
         fillableNumberOfContents / numberOfContents
       )
 
-      console.log(fillableNumberOfContents)
-
       const newItemBlocks = [...itemBlocks]
       const _ = [...Array(fillableNumberOfSequences + 1)].map((_, i) => {
         newItemBlocks.push(...itemBlocks)
@@ -51,7 +49,8 @@ const InfiniteAutoplayCarousel = <T extends unknown>({
   }, [containerRef.current])
 
   const handleUpdateCarousel = (latest: ResolvedValues) => {
-    if (+latest.x >= itemWidthWithGap - 1) {
+    const moveBy = Math.ceil(+latest.x)
+    if (moveBy === itemWidthWithGap) {
       const newItemBlocks = [...itemBlocks]
       newItemBlocks.unshift(itemBlocks[itemBlocks.length - 1])
       newItemBlocks.pop()
@@ -70,7 +69,7 @@ const InfiniteAutoplayCarousel = <T extends unknown>({
           marginLeft: `-${itemWidthWithGap}px`
         }}
         animate={{ x: itemWidthWithGap }}
-        transition={{ duration: '3', ease: 'linear', repeat: Infinity }}
+        transition={{ duration: '2', ease: 'linear', repeat: Infinity }}
       >
         {itemBlocks.map((item, index) => (
           <div key={index} style={{ width: `${itemWidth}px`, height: `${itemHeight}px` }}>
