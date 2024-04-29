@@ -1,7 +1,7 @@
-import Index from './collections/animated-cursor/cursor-mask-image-1'
+import RunApp from './collections/animated-carousel/infinite-autoplay-carousel/InfiniteAutoplayCarousel'
 
 function App() {
-  return <Index />
+  return <RunApp />
 }
 
 export default App
