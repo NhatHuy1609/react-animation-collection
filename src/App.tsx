@@ -1,7 +1,7 @@
-import RunApp from './collections/animated-carousel/infinite-autoplay-carousel/InfiniteAutoplayCarousel'
+import Page from './collections/animated-scroll/blurry-text-reveal-scroll/Page'
 
 function App() {
-  return <RunApp />
+  return <Page />
 }
 
 export default App
