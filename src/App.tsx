@@ -1,4 +1,4 @@
-import Page from './collections/animated-scroll/blurry-text-reveal-scroll/Page'
+import Page from './collections/parallax/image-column-scrolling'
 
 function App() {
   return <Page />
