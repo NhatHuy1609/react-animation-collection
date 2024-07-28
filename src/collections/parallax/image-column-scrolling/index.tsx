@@ -1,6 +1,6 @@
 import Lenis from 'lenis'
 import { useEffect, useRef } from 'react'
-import { useScroll, motion, useTransform, useMotionValueEvent, animate } from 'framer-motion'
+import { useScroll, motion, useTransform } from 'framer-motion'
 import styles from './style.module.css'
 import ImageMain1 from './images/main-1.jpg'
 import ImageMain2 from './images/main-2.jpg'
@@ -30,11 +30,6 @@ const Column = ({ index }: { index: number }) => {
     index * MAX_COLUMNS,
     index > 0 ? (index + 1) * MAX_COLUMNS : MAX_COLUMNS
   )
-
-  useMotionValueEvent(move, 'change', () => {
-    console.log('trigger')
-    console.log(scrollYProgress.get())
-  })
 
   return (
     <motion.div className={styles.column} ref={ref} style={{ translateY: move }}>

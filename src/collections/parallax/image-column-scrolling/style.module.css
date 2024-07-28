@@ -18,7 +18,7 @@
     max-height: 200vh;
     display: grid;
     gap: 50px;
-    background-color: rgb(255, 215, 191);
+    background-color: rgb(255, 234, 221);
     overflow: hidden;
     grid-template-columns: repeat(3, 1fr);
 
