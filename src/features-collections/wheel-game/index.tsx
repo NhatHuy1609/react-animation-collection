@@ -3,32 +3,40 @@ import WheelGame from './components/WheelGame'
 
 interface IGameDataContext {
   items: string[]
-  winner: string
+  winner: {
+    name: string
+    index: number
+  } | null
+  results: string[]
   setItems: React.Dispatch<React.SetStateAction<string[]>>
-  setWinner: React.Dispatch<React.SetStateAction<string>>
+  setResults: React.Dispatch<React.SetStateAction<string[]>>
+  setWinner: React.Dispatch<
+    React.SetStateAction<{
+      name: string
+      index: number
+    } | null>
+  >
 }
 
 export const GameDataContext = createContext<IGameDataContext>({
   items: [],
-  winner: '',
+  winner: null,
+  results: [],
+  setResults: () => {},
   setItems: () => {},
   setWinner: () => {}
 })
 
 const GameDataProvider = ({ children }: { children: ReactNode }) => {
-  const [items, setItems] = useState<string[]>([
-    'Huy',
-    'Tuấn',
-    'Nam',
-    'Anh',
-    'Phong',
-    'Quang',
-    'Nhật'
-  ])
-  const [winner, setWinner] = useState<string>('')
+  const [winner, setWinner] = useState<{
+    name: string
+    index: number
+  } | null>(null)
+  const [results, setResults] = useState<string[]>([])
+  const [items, setItems] = useState<string[]>(['Huy', 'Tuấn', 'Anh', 'Phong', 'Quang', 'Nhật'])
 
   return (
-    <GameDataContext.Provider value={{ items, setItems, winner, setWinner }}>
+    <GameDataContext.Provider value={{ items, setItems, winner, setWinner, results, setResults }}>
       {children}
     </GameDataContext.Provider>
   )

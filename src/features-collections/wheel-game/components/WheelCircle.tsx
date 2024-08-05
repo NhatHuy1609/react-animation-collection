@@ -1,20 +1,28 @@
 import { useRef, useEffect, useContext, useState, useMemo } from 'react'
 import { GameDataContext } from '../index'
-import { motion, useAnimate } from 'framer-motion'
+import { motion, useAnimate, useMotionValue } from 'framer-motion'
+import TickSound from '../assets/tick-sound.mp3'
 
 const WheelCircle = () => {
+  const tickSound = new Audio(TickSound)
   const rotation = useRef(0) // Total angle of rotation recorded
   const colorIndex = useRef(0)
   const frameRef = useRef<number>(0)
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const { items, setWinner } = useContext(GameDataContext)
-  const [wheelAnimateScope, animate] = useAnimate()
   const [isRotating, setRotating] = useState(false)
+  const { items, setWinner } = useContext(GameDataContext)
+  const rotationDeg = useMotionValue(0)
+  const [wheelAnimateScope, animate] = useAnimate()
 
   const reversedItems = useMemo(() => [...items].reverse(), [items])
 
-  const angle = 360 / items.length
+  // Store the current segment
+  const lastSegmentRef = useRef(-1)
+
+  // Wheel's properties
   const radius = 200
+  const angle = 360 / items.length
+  const maxItemCharLength = 16
   const defaultColor = '#000000'
   const colors: Record<string, string> = {
     red: '#E4003A',
@@ -24,6 +32,13 @@ const WheelCircle = () => {
     pink: '#FFB4C2'
   }
 
+  // Calculate font size based on the max length of an item
+  const maxLength = Math.max(...items.map((item) => item.length))
+  const baseFontSize = 46
+  const minFontSize = 16
+  const fontSize = Math.max(minFontSize, baseFontSize - maxLength * 2)
+  const fontStyle = `${fontSize}px Arial`
+
   const pickColor = () => {
     const colorKeys = Array.from(Object.keys(colors))
     const pickedColorKey = colorKeys[colorIndex.current]
@@ -32,6 +47,10 @@ const WheelCircle = () => {
     else colorIndex.current += 1
     return colors[pickedColorKey]
   }
+
+  useEffect(() => {
+    colorIndex.current = 0
+  }, [items])
 
   useEffect(() => {
     const drawWheel = (ctx: CanvasRenderingContext2D) => {
@@ -60,8 +79,12 @@ const WheelCircle = () => {
             ctx.rotate(((i + 0.5) * angle * Math.PI) / 180)
             ctx.textAlign = 'right'
             ctx.fillStyle = '#fff'
-            ctx.font = '32px Arial'
-            ctx.fillText(items[i], radius - 50, 10)
+            ctx.font = fontStyle
+            let itemText = items[i]
+            if (itemText.length > maxItemCharLength) {
+              itemText = itemText.substring(0, maxItemCharLength - 3) + '...'
+            }
+            ctx.fillText(itemText, radius - 20, 10)
             ctx.restore()
           }
         }
@@ -78,7 +101,7 @@ const WheelCircle = () => {
     }
 
     return () => cancelAnimationFrame(frameRef.current)
-  }, [canvasRef])
+  }, [canvasRef, items])
 
   const handleSpinWheel = async () => {
     if (!isRotating) {
@@ -94,16 +117,36 @@ const WheelCircle = () => {
         (360 - rotateAngleBefore)
 
       setRotating(true)
-      await animate('canvas', { rotate: totalRotateAngle }, { duration: 4, type: 'tween' })
+
+      await animate(rotationDeg, totalRotateAngle, {
+        duration: 4,
+        type: 'spring',
+        stiffness: 10,
+        damping: 10,
+        onUpdate: (latest) => {
+          const currentSegment = Math.floor((((latest % 360) + 360) % 360) / angle)
+          if (currentSegment !== lastSegmentRef.current) {
+            tickSound.play()
+            lastSegmentRef.current = currentSegment
+          }
+        }
+      })
+
       rotation.current = totalRotateAngle
       setRotating(false)
-      setWinner(reversedItems[winnerIndex])
+      setWinner({ name: reversedItems[winnerIndex], index: winnerIndex })
     }
   }
 
   return (
     <div className='relative size-[400px]' ref={wheelAnimateScope}>
-      <motion.canvas ref={canvasRef} className='relative' />
+      <motion.canvas
+        ref={canvasRef}
+        className='relative'
+        animate={{ rotate: 360 }}
+        style={{ rotate: rotationDeg }}
+        transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+      />
       <span className='absolute right-[-10px] top-1/2 -translate-y-1/2 border-[24px] border-y-[16px] border-y-transparent border-l-transparent border-r-stone-400'></span>
       <button
         onClick={handleSpinWheel}

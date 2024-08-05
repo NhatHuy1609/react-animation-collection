@@ -1,5 +1,4 @@
-// import Page from './features-collections/wheel-game'
-import Page from './collections/parallax/section-transition-1'
+import Page from './features-collections/wheel-game'
 
 function App() {
   return <Page />
