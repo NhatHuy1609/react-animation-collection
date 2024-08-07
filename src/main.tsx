@@ -7,9 +7,9 @@ import { Profiler } from 'react'
 function onRenderCallback() {}
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  // <React.StrictMode>
-  <Profiler id='App' onRender={onRenderCallback}>
-    <App />
-  </Profiler>
-  // </React.StrictMode>
+  <React.StrictMode>
+    <Profiler id='App' onRender={onRenderCallback}>
+      <App />
+    </Profiler>
+  </React.StrictMode>
 )
