@@ -30,16 +30,18 @@ const Page = () => {
   }, [])
 
   return (
-    <div className={styles.container} ref={containerRef}>
-      <motion.div
-        className={styles.section_1}
-        style={{ scale: scale1, rotate: rotate1 }}
-      ></motion.div>
-      <motion.div className={styles.section_2} style={{ scale: scale2, rotate: rotate2 }}>
-        <span className='m-20 text-[8rem] text-white'>HEELO I'M HUY- 21</span>
-      </motion.div>
+    <>
+      <div className={styles.container} ref={containerRef}>
+        <motion.div
+          className={styles.section_1}
+          style={{ scale: scale1, rotate: rotate1 }}
+        ></motion.div>
+        <motion.div className={styles.section_2} style={{ scale: scale2, rotate: rotate2 }}>
+          <span className='m-20 text-[8rem] text-white'>HEELO I'M HUY- 21</span>
+        </motion.div>
+      </div>
       <div className='h-[200vh] w-full bg-indigo-300'></div>
-    </div>
+    </>
   )
 }
 

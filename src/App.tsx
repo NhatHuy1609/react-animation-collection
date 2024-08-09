@@ -1,4 +1,4 @@
-import Page from './collections/parallax/text-parallax-1/Page'
+import Page from './collections/parallax/scroll-cards-parallax'
 
 function App() {
   return <Page />
